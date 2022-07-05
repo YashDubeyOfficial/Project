@@ -1,11 +1,54 @@
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  PermissionsAndroid,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
-import DocumentPicker, {types} from 'react-native-document-picker';
+// import DocumentPicker, {types} from 'react-native-document-picker';
+import CameraRoll from '@react-native-community/cameraroll';
 
-const AddPhotos = (props) => {
-//  console.log('AddPhotos==>>>',props)
-  const ImgSelector = async (props) => {
-    console.log('ImgSel',props)
+const AddPhotos = props => {
+   console.log('AddPhotos==>>>',props.navigation)
+
+  useEffect(() => {
+    checkPermission().then(() => {
+     
+    });
+  }, []);
+
+  const checkPermission = async () => {
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+    );
+
+    if (hasPermission) {
+      return true;
+    }
+
+    const status = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      {
+        title: 'Image gallery app permissions',
+        message: 'Image gallery needs your permission to access your photos',
+        buttonPositive: 'OK',
+      },
+    );
+
+    return status === 'granted';
+  };
+  // const getPhotos = async () => {
+  //   const photos = await CameraRoll.getPhotos({
+  //     first: 10,
+  //   });
+
+  //   console.log(photos.edges.map(edge => edge.node));
+  // };
+
+  const ImgSelector = async props => {
+    // console.log('addPhotoScreen==>>',props)
     try {
       // setLoading(true);
       const pickerResult = await DocumentPicker.pickSingle({
@@ -13,7 +56,7 @@ const AddPhotos = (props) => {
         copyTo: 'cachesDirectory',
         type: [types.images],
       });
-      props.setImg([...Img,pickerResult.fileCopyUri]);
+      props.addImg([...Img, pickerResult.fileCopyUri]);
       // setLoading(false);
     } catch (e) {
       handleError(e);
@@ -32,7 +75,6 @@ const AddPhotos = (props) => {
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
       }}>
-     
       <View
         style={{
           alignItems: 'flex-end',
@@ -66,7 +108,7 @@ const AddPhotos = (props) => {
       </View>
 
       <TouchableOpacity
-        onPress={() => ImgSelector(props)}
+        onPress={() =>  props.navigation.navigate('CustomCamRoll')}
         style={{
           flexDirection: 'row',
           justifyContent: 'center',
@@ -97,8 +139,9 @@ const AddPhotos = (props) => {
           marginVertical: 10,
           marginBottom: 20,
         }}
-        onPress={()=>{props.navigation.navigate('TakePhoto')}}
-        >
+        onPress={() => {
+          props.navigation.navigate('TakePhoto');
+        }}>
         <Text style={{color: 'white'}}>Take a photo</Text>
       </TouchableOpacity>
 

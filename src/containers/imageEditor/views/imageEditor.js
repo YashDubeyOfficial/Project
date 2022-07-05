@@ -12,11 +12,18 @@ import {
 import React, {useState, useEffect} from 'react';
 import DocumentPicker, {types} from 'react-native-document-picker';
 import Video from 'react-native-video';
-import {ScrollView} from 'react-native-gesture-handler';
+import {ScrollView,} from 'react-native-gesture-handler';
 import AddPhotos from './AddPhotos';
 
 const Home = ({navigation}) => {
-  // console.log('Home=>>',navigation)
+  useEffect(() => {
+    test()
+  }, [])
+  
+  const test =()=>{
+
+    console.log('Home=>>')
+  }
   const dummyData = [
     {
       key: 1,
@@ -24,7 +31,7 @@ const Home = ({navigation}) => {
     },
     {
       key: 2,
-      pic: require('../../../../assets/dummyLeftImg.png'),
+      pic: require('../../../../assets/Dp1.png'),
     },
     {
       key: 3,
@@ -32,18 +39,19 @@ const Home = ({navigation}) => {
     },
     {
       key: 4,
-      pic: require('../../../../assets/dummyLeftImg.png'),
+      pic: require('../../../../assets/dp3.png'),
     },
     {
       key: 5,
-      pic: require('../../../../assets/dummyLeftImg.png'),
+      pic:require('../../../../assets/dummyLeftImg.png'),
     },
   ];
   const [modal, setModal] = useState(false);
   const [Img, setImg] = useState([]);
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  console.log('parent==>>', Img)
+  console.log('parent==>>', modal)
+  console.log('parent')
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -66,9 +74,9 @@ const Home = ({navigation}) => {
               transparent={true}
               visible={modal}
               onRequestClose={() => {
-                setModal(false);
+                setModal(!modal);
               }}>
-              <AddPhotos navigation={navigation} closeBtn={setModal} setImg={(val)=>setImg(val)} />
+              <AddPhotos navigation={navigation} closeBtn={setModal} addImg={setImg} />
       
             </Modal>
           </View>
@@ -76,7 +84,9 @@ const Home = ({navigation}) => {
           {dummyData.map(item => {
             return (
               <View key={item.key} style={styles.addedImg}>
-                <Image style={{height: 130, width: 170}} source={item.pic} />
+                <Image 
+                // style={{height: 130, width: 170}}
+                 source={item.pic} />
               </View>
             );
           })}
@@ -113,6 +123,8 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // backgroundColor:'#c4c4c4',
+    // opacity:0.7,
   },
   header1: {
     marginTop: 35,
@@ -131,6 +143,7 @@ const styles = StyleSheet.create({
   header2Text: {
     fontWeight: '500',
     fontSize: 16,
+    color:'#707070'
   },
   gallery: {
     // borderWidth: 5,
@@ -155,8 +168,7 @@ const styles = StyleSheet.create({
   addedImg: {
     alignItems: 'center',
     justifyContent: 'center',
-    // width:windowWidth
-    width: 411 / 2,
-    height: 830 / 5,
+    width: 150,
+    height: 143,
   },
 });

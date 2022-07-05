@@ -1,7 +1,26 @@
-import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
-import React from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Button,
+  PermissionsAndroid,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+// import { RNCamera } from 'react-native-camera';
+// import {useCamera} from 'react-native-camera-hooks';
+
+import {Camera, useCameraDevices} from 'react-native-vision-camera';
 
 const TakePhoto = () => {
+  useEffect(() => {
+    Camera.requestCameraPermission();
+  }, []);
+  const devices = useCameraDevices();
+  const device = devices.back;
+  console.log("devicesssss==>>>>>",devices)
+  console.log('devi===>>>>',device)
   return (
     <View style={styles.container}>
       {/* HEADER */}
@@ -10,10 +29,9 @@ const TakePhoto = () => {
         <TouchableOpacity style={styles.headerBtn}>
           <Image source={require('../../../../assets/crossBlue.png')} />
         </TouchableOpacity>
-        <View
-          style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row'}}>
           {/* Flash */}
-          <View style={{marginHorizontal:20}}>
+          <View style={{marginHorizontal: 20}}>
             <TouchableOpacity style={styles.headerBtn}>
               <Image source={require('../../../../assets/flashOffBlue.png')} />
             </TouchableOpacity>
@@ -25,7 +43,7 @@ const TakePhoto = () => {
         </View>
       </View>
       {/* CONTENT */}
-      <View style={styles.content}>
+      {/* <View style={styles.content}>
         <Text style={{fontWeight: '700', fontSize: 20, textAlign: 'center'}}>
           Welcome to Construct
         </Text>
@@ -48,16 +66,28 @@ const TakePhoto = () => {
           Click here to allow Construct AI to access your camera and camera
           roll.
         </Text>
-      </View>
+      </View> */}
       {/* BUTTONS */}
-      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+      {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <TouchableOpacity style={styles.allowBtn}>
           <Text>Allow</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.denyBtn}>
           <Text>Deny</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
+
+      {/* CAMERA VIEWWWWWWWWWWWWWWWWWWWWWW */}
+      {/* <RNCamera
+        ref={cameraRef}
+        type={RNCamera.Constants.Type.back}
+        style={styles.preview}>
+        <Button title="click" />
+      </RNCamera> */}
+
+      <Camera  style={StyleSheet.absoluteFill}
+      device={device}
+      isActive={true} />
       {/* SHUTTER BTN */}
       <View>
         <TouchableOpacity style={styles.shutterBtn}>
@@ -73,6 +103,13 @@ export default TakePhoto;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: 100,
+    // width: 390,
+  },
+  preview: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   header: {
     flexDirection: 'row',

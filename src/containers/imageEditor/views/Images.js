@@ -56,7 +56,7 @@ const Images = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        {/* ADD IMAGE */}
+        {/* ADD IMAGE BTN*/}
         <View>
           <TouchableOpacity
             onPress={() => alert('props')}
@@ -84,42 +84,23 @@ const Images = () => {
         {dummyData.map(item => {
           return (
             <View style={styles.ImgCard}>
-              <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <View>
-                  <Image 
-                //   style={{width: 385, height: 385}}
-                   source={item.pic} />
-                </View>
-                <View
-                  style={{
-                    height: 30,
-                    width: 30,
-                    borderRadius: 15,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    position: 'absolute',
-                    left: 10,
-                    backgroundColor: '#fff',
-                  }}>
-                  <Image source={require('../../../../assets/crossBlue.png')} />
+              <View style={styles.ImgView}>
+                <Image
+                  style={{width: '100%', height: 385}}
+                  source={require('../../../../assets/dummyLeftImg.png')}
+                />
+                <View style={styles.CrossBtn}>
+                  <TouchableOpacity style={{backgroundColor: '#fff',height:30,width:30,justifyContent:'center',alignItems:'center',borderRadius:15}}>
+                    <Image
+                      source={require('../../../../assets/crossBlue.png')}
+                    />
+                  </TouchableOpacity>
                 </View>
               </View>
-              <View>
-                <TouchableOpacity
-                  onPress={() => alert('props')}
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#152766',
-                    padding: 15,
-                  }}>
-                  <Image
-                    style={{marginRight: 10}}
-                    source={require('../../../../assets/camWhite.png')}
-                  />
-
-                  <Text style={{color: 'white'}}>Edit Image</Text>
+              <View style={styles.EditBtn}>
+                <TouchableOpacity style={{backgroundColor:'#152766',alignItems:'center',justifyContent:'center',flexDirection:'row',padding:10,marginBottom:20}}>
+                  <Image style={{marginRight:10}} source={require('../../../../assets/camWhite.png')} />
+                  <Text style={{color:"#fff"}}>Edit Image</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -142,7 +123,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 40,
   },
-  ImgCard: {
-    marginBottom: 15,
+  CrossBtn: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
   },
 });
