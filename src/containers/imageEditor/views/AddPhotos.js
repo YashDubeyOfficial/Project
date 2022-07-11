@@ -5,18 +5,18 @@ import {
   Image,
   TouchableOpacity,
   PermissionsAndroid,
+  Modal,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 // import DocumentPicker, {types} from 'react-native-document-picker';
 import CameraRoll from '@react-native-community/cameraroll';
+import TakePhoto from './TakePhoto';
 
-const AddPhotos = props => {
+const AddPhotos = (props, {navigation}) => {
   //  console.log('AddPhotos==>>>',props.navigation)
-
+  const [first, setfirst] = useState(false);
   useEffect(() => {
-    checkPermission().then(() => {
-     
-    });
+    checkPermission().then(() => {});
   }, []);
 
   const checkPermission = async () => {
@@ -39,30 +39,6 @@ const AddPhotos = props => {
 
     return status === 'granted';
   };
-  // const getPhotos = async () => {
-  //   const photos = await CameraRoll.getPhotos({
-  //     first: 10,
-  //   });
-
-  //   console.log(photos.edges.map(edge => edge.node));
-  // };
-
-  const ImgSelector = async props => {
-    // console.log('addPhotoScreen==>>',props)
-    try {
-      // setLoading(true);
-      const pickerResult = await DocumentPicker.pickSingle({
-        presentationStyle: 'fullScreen',
-        copyTo: 'cachesDirectory',
-        type: [types.images],
-      });
-      props.addImg([...Img, pickerResult.fileCopyUri]);
-      // setLoading(false);
-    } catch (e) {
-      handleError(e);
-    }
-  };
-  // console.log("Image array==>>",Img)
 
   return (
     <View
@@ -108,7 +84,9 @@ const AddPhotos = props => {
       </View>
 
       <TouchableOpacity
-        onPress={() =>  props.navigation.navigate('CustomCamRoll', {closeBtn:props.closeBtn})}
+        onPress={() =>
+          props.navigation.navigate('CustomCamRoll', {closeBtn: props.closeBtn})
+        }
         style={{
           flexDirection: 'row',
           justifyContent: 'center',
@@ -140,12 +118,21 @@ const AddPhotos = props => {
           marginBottom: 20,
         }}
         onPress={() => {
-          props.navigation.navigate('TakePhoto');
+          setfirst(true);
         }}>
         <Text style={{color: 'white'}}>Take a photo</Text>
       </TouchableOpacity>
 
-      {/* {/ <Filters/> /} */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={first}
+        onRequestClose={() => {
+          setfirst(false);
+        }}>
+        <TakePhoto clsPhoto={setfirst} navigation={props.navigation} />
+       
+      </Modal>
     </View>
   );
 };
