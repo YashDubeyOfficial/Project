@@ -7,6 +7,7 @@ import TakePhoto from '../containers/imageEditor/views/TakePhoto';
 import imageEditor from '../containers/imageEditor/views/imageEditor';
 import Images from '../containers/imageEditor/views/Images';
 import CustomCamRoll from '../containers/imageEditor/views/CustomCamRoll';
+import EditPhoto from '../containers/imageEditor/views/editPhoto';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,11 @@ const StackNavigation = ({navigation}) => {
           }}
       />
       <Stack.Screen name="TakePhoto" component={TakePhoto} 
+           options={{
+            headerShown:false,
+          }}
+      />
+      <Stack.Screen name="EditPhoto" component={EditPhoto} 
            options={{
             headerShown:false,
           }}

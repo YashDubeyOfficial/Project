@@ -11,7 +11,7 @@ import React, {useState, useEffect} from 'react';
 import CameraRoll from '@react-native-community/cameraroll';
 
 const AddPhotos = props => {
-   console.log('AddPhotos==>>>',props.navigation)
+  //  console.log('AddPhotos==>>>',props.navigation)
 
   useEffect(() => {
     checkPermission().then(() => {
@@ -108,7 +108,7 @@ const AddPhotos = props => {
       </View>
 
       <TouchableOpacity
-        onPress={() =>  props.navigation.navigate('CustomCamRoll')}
+        onPress={() =>  props.navigation.navigate('CustomCamRoll', {closeBtn:props.closeBtn})}
         style={{
           flexDirection: 'row',
           justifyContent: 'center',

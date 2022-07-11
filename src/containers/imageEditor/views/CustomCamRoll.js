@@ -12,8 +12,8 @@ import React, {useState, useEffect} from 'react';
 import CameraRoll from '@react-native-community/cameraroll';
 import {FlatList} from 'react-native-gesture-handler';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-const CustomCamRoll = ({navigation}) => {
-  // console.log("props CustomcAmRoll==>>",navigation)
+const CustomCamRoll = ({navigation},props) => {
+  console.log("props CustomcAmRoll==>>",props)
   // console.log("props CustomcAmRoll==>>")
   useEffect(() => {
     checkPermission().then(() => {
@@ -22,6 +22,8 @@ const CustomCamRoll = ({navigation}) => {
   }, []);
 
   const [galleryData, setGalleryData] = useState([]);
+  const [imgUrl, setImgUrl] = useState([]);
+  console.log(imgUrl);
 
   const checkPermission = async () => {
     const hasPermission = await PermissionsAndroid.check(
@@ -45,7 +47,7 @@ const CustomCamRoll = ({navigation}) => {
   };
   const getPhotos = async () => {
     const photos = await CameraRoll.getPhotos({
-      first: 100,
+      first: 18,
     });
 
     // console.log(photos.edges.map(edge => edge.node));
@@ -53,9 +55,7 @@ const CustomCamRoll = ({navigation}) => {
   };
 
   return (
-    <View
-    // style={{flex:1,flexDirection:'row',flexWrap:'wrap'}}
-    >
+    <View style={{flex: 1}}>
       <View style={{flexDirection: 'row', marginTop: 10}}>
         <Text
           style={{
@@ -68,7 +68,10 @@ const CustomCamRoll = ({navigation}) => {
           Camera Roll
         </Text>
       </View>
-      <TouchableOpacity onPress={()=>{navigation.popToTop(2)}}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.popToTop(2);
+        }}>
         <Image
           style={{marginHorizontal: 10, marginBottom: 13}}
           source={require('../../../../assets/crosssky.png')}
@@ -96,19 +99,19 @@ const CustomCamRoll = ({navigation}) => {
                 source={{uri: item.item.image.uri}}
               />
               <BouncyCheckbox
-                size={25}
+                size={22}
                 fillColor="#2994FF"
-                // unfillColor="#FFFFFF"
                 style={{
-                  // borderWidth: 1,
                   position: 'absolute',
-                  right: 1,
+                  right: 0,
                   top: 10,
                 }}
-                // text="Custom Checkbox"
                 iconStyle={{borderColor: '#fff'}}
                 textStyle={{fontFamily: 'JosefinSans-Regular'}}
-                // onPress={(isChecked: boolean) => {}}
+                onPress={() => {
+                  // console.log()
+                  setImgUrl([...imgUrl, item.item.image.uri]);
+                }}
               />
             </View>
           );

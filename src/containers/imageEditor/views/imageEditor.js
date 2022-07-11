@@ -12,18 +12,18 @@ import {
 import React, {useState, useEffect} from 'react';
 import DocumentPicker, {types} from 'react-native-document-picker';
 import Video from 'react-native-video';
-import {ScrollView,} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import AddPhotos from './AddPhotos';
 
 const Home = ({navigation}) => {
   useEffect(() => {
-    test()
-  }, [])
-  
-  const test =()=>{
+    test();
+  }, [modal]);
 
-    console.log('Home=>>')
-  }
+  const test = () => {
+    console.log('Home=>>',modal);
+    console.log('Home=>>');
+  };
   const dummyData = [
     {
       key: 1,
@@ -43,15 +43,15 @@ const Home = ({navigation}) => {
     },
     {
       key: 5,
-      pic:require('../../../../assets/dummyLeftImg.png'),
+      pic: require('../../../../assets/dummyLeftImg.png'),
     },
   ];
   const [modal, setModal] = useState(false);
   const [Img, setImg] = useState([]);
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  console.log('parent==>>', modal)
-  console.log('parent')
+  // console.log('parent==>>', modal)
+  // console.log('parent')
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -74,19 +74,23 @@ const Home = ({navigation}) => {
               transparent={true}
               visible={modal}
               onRequestClose={() => {
-                setModal(!modal);
+                setModal(false);
               }}>
-              <AddPhotos navigation={navigation} closeBtn={setModal} addImg={setImg} />
-      
+              <AddPhotos
+                navigation={navigation}
+                closeBtn={setModal}
+                addImg={setImg}
+              />
             </Modal>
           </View>
           {/* addedImg */}
           {dummyData.map(item => {
             return (
               <View key={item.key} style={styles.addedImg}>
-                <Image 
-                // style={{height: 130, width: 170}}
-                 source={item.pic} />
+                <Image
+                  // style={{height: 130, width: 170}}
+                  source={item.pic}
+                />
               </View>
             );
           })}
@@ -143,7 +147,7 @@ const styles = StyleSheet.create({
   header2Text: {
     fontWeight: '500',
     fontSize: 16,
-    color:'#707070'
+    color: '#707070',
   },
   gallery: {
     // borderWidth: 5,
@@ -168,7 +172,7 @@ const styles = StyleSheet.create({
   addedImg: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 150,
+    width: 193,
     height: 143,
   },
 });
