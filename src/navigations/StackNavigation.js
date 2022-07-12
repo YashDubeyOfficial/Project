@@ -8,6 +8,7 @@ import imageEditor from '../containers/imageEditor/views/imageEditor';
 import Images from '../containers/imageEditor/views/Images';
 import CustomCamRoll from '../containers/imageEditor/views/CustomCamRoll';
 import EditPhoto from '../containers/imageEditor/views/editPhoto';
+import Test from '../containers/imageEditor/views/Test';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +20,12 @@ const StackNavigation = ({navigation}) => {
             headerShown:false,
           }}
       /> */}
-      <Stack.Screen name="imageEditor" component={imageEditor} 
+      <Stack.Screen name="Test" component={Test} 
+           options={{
+            headerShown:false,
+          }}
+      />
+      {/* <Stack.Screen name="imageEditor" component={imageEditor} 
            options={{
             headerShown:false,
           }}
@@ -45,7 +51,7 @@ const StackNavigation = ({navigation}) => {
            options={{
             headerShown:false,
           }}
-      />
+      /> */}
     </Stack.Navigator>
   );
 };

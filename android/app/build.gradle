@@ -258,7 +258,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-
+    implementation 'com.android.support:appcompat-v7:25.0.0'
+    implementation 'com.android.support:support-annotations:25.0.0'
+    implementation 'com.android.support:design:25.0.0'
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 

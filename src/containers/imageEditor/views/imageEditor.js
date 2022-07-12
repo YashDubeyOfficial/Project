@@ -10,8 +10,6 @@ import {
   Button,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import DocumentPicker, {types} from 'react-native-document-picker';
-import Video from 'react-native-video';
 import {ScrollView} from 'react-native-gesture-handler';
 import AddPhotos from './AddPhotos';
 

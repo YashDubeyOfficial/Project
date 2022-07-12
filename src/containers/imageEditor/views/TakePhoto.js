@@ -32,9 +32,9 @@ const TakePhoto = (props, {navigation}) => {
         // actions={{ rightButtonText: 'Done', leftButtonText: 'Cancel' }}
         onBottomButtonPressed={event => onBottomButtonPressed(event)}
         flashImages={{
-          on: require('../../../../assets/flashOn.png'),
+          on: require('../../../../assets/flashOffBlue.png'),
           off: require('../../../../assets/flashOffBlue.png'),
-          auto: require('../../../../assets/flashauto.png'),
+          auto: require('../../../../assets/flashOffBlue.png'),
         }}
         cameraFlipImage={require('../../../../assets/flipCamBlue.png')}
         captureButtonImage={require('../../../../assets/shutterBtn.png')}
