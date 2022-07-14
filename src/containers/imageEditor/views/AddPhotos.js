@@ -8,18 +8,19 @@ import {
   Modal,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-// import DocumentPicker, {types} from 'react-native-document-picker';
-import CameraRoll from '@react-native-community/cameraroll';
 import TakePhoto from './TakePhoto';
+import CustomCamRoll from './CustomCamRoll';
 
 const AddPhotos = (props, {navigation}) => {
-  //  console.log('AddPhotos==>>>',props.navigation)
   const [first, setfirst] = useState(false);
+  const [galImg, setGalImg] = useState(false);
   useEffect(() => {
-    checkPermission().then(() => {});
+    checkPermissionCamera().then(() => {
+      checkPermissionStorage();
+    });
   }, []);
 
-  const checkPermission = async () => {
+  const checkPermissionStorage = async () => {
     const hasPermission = await PermissionsAndroid.check(
       PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
     );
@@ -33,6 +34,26 @@ const AddPhotos = (props, {navigation}) => {
       {
         title: 'Image gallery app permissions',
         message: 'Image gallery needs your permission to access your photos',
+        buttonPositive: 'OK',
+      },
+    );
+
+    return status === 'granted';
+  };
+  const checkPermissionCamera = async () => {
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+    );
+
+    if (hasPermission) {
+      return true;
+    }
+
+    const status = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      {
+        title: 'Camera app permissions',
+        message: 'Camera needs your permission to access your photos',
         buttonPositive: 'OK',
       },
     );
@@ -59,7 +80,7 @@ const AddPhotos = (props, {navigation}) => {
         }}>
         <TouchableOpacity
           onPress={() => {
-            props.closeBtn(false);
+            props.closeBtn(false)
           }}>
           <Image source={require('../../../../assets/crosssky.png')} />
         </TouchableOpacity>
@@ -85,7 +106,8 @@ const AddPhotos = (props, {navigation}) => {
 
       <TouchableOpacity
         onPress={() =>
-          props.navigation.navigate('CustomCamRoll', {closeBtn: props.closeBtn})
+          // props.navigation.navigate('CustomCamRoll')
+          setGalImg(true)
         }
         style={{
           flexDirection: 'row',
@@ -106,6 +128,17 @@ const AddPhotos = (props, {navigation}) => {
         <Text style={{color: 'white', marginRight: 30}}>Add a Photo</Text>
       </TouchableOpacity>
 
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={galImg}
+        onRequestClose={() => {
+          setGalImg(false);
+        }}>
+        <CustomCamRoll clsGall={setGalImg} />
+        {/* <TakePhoto clsPhoto={setfirst} /> */}
+      </Modal>
+
       <TouchableOpacity
         style={{
           justifyContent: 'center',
@@ -125,13 +158,16 @@ const AddPhotos = (props, {navigation}) => {
 
       <Modal
         animationType="slide"
-        transparent={true}
+        transparent={false}
         visible={first}
         onRequestClose={() => {
           setfirst(false);
         }}>
-        <TakePhoto clsPhoto={setfirst} navigation={props.navigation} />
-       
+        <TakePhoto
+          closeBtn={props.closeBtn}
+          clsPhoto={setfirst}
+          navigation={props.navigation}
+        />
       </Modal>
     </View>
   );

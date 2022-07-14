@@ -9,15 +9,17 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {CameraScreen} from 'react-native-camera-kit';
+import Test from './Test';
 
 const TakePhoto = (props, {navigation}) => {
-  console.log('props===.....', props.navigation);
+  const [photo, setPhoto] = useState(true);
+
   const onBottomButtonPressed = async event => {
     const captureImages = JSON.stringify(event.captureImages);
-    console.log(captureImages[0])
+    console.log(captureImages[0]);
     await props.navigation.navigate('EditPhoto', {ImgUri: captureImages});
   };
-  return (
+  return photo === false ? (
     <View style={styles.container}>
       {/* HEADER */}
       {/* Cross */}
@@ -32,9 +34,9 @@ const TakePhoto = (props, {navigation}) => {
         // actions={{ rightButtonText: 'Done', leftButtonText: 'Cancel' }}
         onBottomButtonPressed={event => onBottomButtonPressed(event)}
         flashImages={{
-          on: require('../../../../assets/flashOffBlue.png'),
+          on: require('../../../../assets/flashOn.png'),
           off: require('../../../../assets/flashOffBlue.png'),
-          auto: require('../../../../assets/flashOffBlue.png'),
+          auto: require('../../../../assets/flashAuto.png'),
         }}
         cameraFlipImage={require('../../../../assets/flipCamBlue.png')}
         captureButtonImage={require('../../../../assets/shutterBtn.png')}
@@ -46,6 +48,12 @@ const TakePhoto = (props, {navigation}) => {
         </TouchableOpacity>
       </View>
     </View>
+  ) : (
+    <Test
+      clsEditor={props.clsPhoto}
+      closeBtn={props.closeBtn}
+      navigation={props.navigation}
+    />
   );
 };
 
@@ -60,6 +68,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
+    backgroundColor: 'red',
   },
   header: {
     flexDirection: 'row',

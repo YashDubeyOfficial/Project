@@ -12,16 +12,13 @@ import {
 import React, {useState, useEffect} from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
 import AddPhotos from './AddPhotos';
+import {LogBox} from 'react-native';
 
 const Home = ({navigation}) => {
-  useEffect(() => {
-    test();
-  }, [modal]);
+  LogBox.ignoreLogs([
+    "ViewPropTypes will be removed from React Native. Migrate to ViewPropTypes exported from 'deprecated-react-native-prop-types'.",
+  ]);
 
-  const test = () => {
-    console.log('Home=>>',modal);
-    console.log('Home=>>');
-  };
   const dummyData = [
     {
       key: 1,
@@ -52,7 +49,7 @@ const Home = ({navigation}) => {
   // console.log('parent')
   return (
     <ScrollView>
-      <View style={styles.container}>
+      <View style={modal ? styles.containerOff : styles.containerOn}>
         {/* >Image Editor */}
         <View style={styles.header1}>
           <Text style={styles.header1Text}>Image Editor</Text>
@@ -71,6 +68,7 @@ const Home = ({navigation}) => {
               animationType="slide"
               transparent={true}
               visible={modal}
+              hardwareAccelerated={true}
               onRequestClose={() => {
                 setModal(false);
               }}>
@@ -85,10 +83,7 @@ const Home = ({navigation}) => {
           {dummyData.map(item => {
             return (
               <View key={item.key} style={styles.addedImg}>
-                <Image
-                  // style={{height: 130, width: 170}}
-                  source={item.pic}
-                />
+                <Image source={item.pic} />
               </View>
             );
           })}
@@ -123,10 +118,13 @@ const Home = ({navigation}) => {
 export default Home;
 
 const styles = StyleSheet.create({
-  container: {
+  containerOn: {
     flex: 1,
-    // backgroundColor:'#c4c4c4',
-    // opacity:0.7,
+  },
+  containerOff: {
+    flex: 1,
+    backgroundColor: '#c4c4c4',
+    opacity: 0.7,
   },
   header1: {
     marginTop: 35,
@@ -159,7 +157,7 @@ const styles = StyleSheet.create({
   },
   addImg: {
     borderWidth: 1,
-    marginLeft: 30,
+    marginLeft: 25,
     borderColor: '#2994FF',
     borderStyle: 'dashed',
     width: 134,

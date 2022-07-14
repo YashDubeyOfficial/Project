@@ -5,10 +5,18 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Modal
 } from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import AddPhotos from './AddPhotos';
 
-const Images = () => {
+import {LogBox} from 'react-native';
+
+const Images = ({navigation}) => {
+  // console.log('navigation',navigation)
+  LogBox.ignoreLogs([
+    "ViewPropTypes will be removed from React Native. Migrate to ViewPropTypes exported from 'deprecated-react-native-prop-types'.",
+  ]);
   const dummyData = [
     {
       key: 1,
@@ -31,20 +39,21 @@ const Images = () => {
       pic: require('../../../../assets/dummyLeftImg.png'),
     },
   ];
+  const [modal, setModal] = useState(false);
   return (
     <ScrollView>
-      <View style={styles.container}>
+      <View style={modal ? styles.containerOff : styles.containerOn}>
         <View style={styles.header}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>navigation.goBack('imageEditor')}>
             <Image source={require('../../../../assets/crosssky.png')} />
           </TouchableOpacity>
           <View style={{position: 'absolute', bottom: 5, left: 120}}>
             <Text
-              style={{fontWeight: '900', fontSize: 30, textAlign: 'center'}}>
+              style={{fontWeight: '900', fontSize: 30, textAlign: 'center',color:'#707070'}}>
               Images
             </Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity >
             <Text
               style={{
                 fontWeight: '500',
@@ -59,7 +68,10 @@ const Images = () => {
         {/* ADD IMAGE BTN*/}
         <View>
           <TouchableOpacity
-            onPress={() => alert('props')}
+            onPress={() => 
+            // setModal(true)
+            navigation.navigate('AddPhotos')
+            }
             style={{
               flexDirection: 'row',
               justifyContent: 'center',
@@ -78,19 +90,39 @@ const Images = () => {
 
             <Text style={{color: 'white'}}>Add Image(s)</Text>
           </TouchableOpacity>
+          {/* <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modal}
+            hardwareAccelerated={true}
+            onRequestClose={() => {
+              setModal(false);
+            }}>
+            <AddPhotos
+              closeBtn={setModal}
+            />
+          </Modal> */}
         </View>
 
         {/* IMAGES */}
         {dummyData.map(item => {
           return (
-            <View style={styles.ImgCard}>
+            <View key={item.key} style={styles.ImgCard}>
               <View style={styles.ImgView}>
                 <Image
                   style={{width: '100%', height: 385}}
                   source={require('../../../../assets/dummyLeftImg.png')}
                 />
                 <View style={styles.CrossBtn}>
-                  <TouchableOpacity style={{backgroundColor: '#fff',height:30,width:30,justifyContent:'center',alignItems:'center',borderRadius:15}}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: '#fff',
+                      height: 30,
+                      width: 30,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderRadius: 15,
+                    }}>
                     <Image
                       source={require('../../../../assets/crossBlue.png')}
                     />
@@ -98,9 +130,20 @@ const Images = () => {
                 </View>
               </View>
               <View style={styles.EditBtn}>
-                <TouchableOpacity style={{backgroundColor:'#152766',alignItems:'center',justifyContent:'center',flexDirection:'row',padding:10,marginBottom:20}}>
-                  <Image style={{marginRight:10}} source={require('../../../../assets/camWhite.png')} />
-                  <Text style={{color:"#fff"}}>Edit Image</Text>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#152766',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                    padding: 10,
+                    marginBottom: 20,
+                  }}>
+                  <Image
+                    style={{marginRight: 10}}
+                    source={require('../../../../assets/camWhite.png')}
+                  />
+                  <Text style={{color: '#fff'}}>Edit Image</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -114,8 +157,13 @@ const Images = () => {
 export default Images;
 
 const styles = StyleSheet.create({
-  container: {
+  containerOn: {
     flex: 1,
+  },
+  containerOff: {
+    flex: 1,
+    backgroundColor: '#c4c4c4',
+    opacity: 0.7,
   },
   header: {
     flexDirection: 'row',

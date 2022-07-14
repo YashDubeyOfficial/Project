@@ -12,13 +12,10 @@ import React, {useState, useEffect} from 'react';
 import CameraRoll from '@react-native-community/cameraroll';
 import {FlatList} from 'react-native-gesture-handler';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-const CustomCamRoll = ({navigation},props) => {
-  console.log("props CustomcAmRoll==>>",props)
-  // console.log("props CustomcAmRoll==>>")
+const CustomCamRoll = props => {
+  // console.log('props CustomcAmRoll==>>', props);
   useEffect(() => {
-    checkPermission().then(() => {
-      getPhotos();
-    });
+    getPhotos();
   }, []);
 
   const [galleryData, setGalleryData] = useState([]);
@@ -47,7 +44,7 @@ const CustomCamRoll = ({navigation},props) => {
   };
   const getPhotos = async () => {
     const photos = await CameraRoll.getPhotos({
-      first: 18,
+      first: 200,
     });
 
     // console.log(photos.edges.map(edge => edge.node));
@@ -56,21 +53,28 @@ const CustomCamRoll = ({navigation},props) => {
 
   return (
     <View style={{flex: 1}}>
-      <View style={{flexDirection: 'row', marginTop: 10}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginTop: 10,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
         <Text
           style={{
             justifyContent: 'center',
             alignItems: 'center',
-            marginLeft: 100,
+            // marginLeft: 100,
             fontSize: 30,
             fontWeight: '900',
+            color: '#707070',
           }}>
           Camera Roll
         </Text>
       </View>
       <TouchableOpacity
         onPress={() => {
-          navigation.popToTop(2);
+          props.clsGall(false);
         }}>
         <Image
           style={{marginHorizontal: 10, marginBottom: 13}}
