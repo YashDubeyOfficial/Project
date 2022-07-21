@@ -13,13 +13,22 @@ import Test from './Test';
 
 const TakePhoto = (props, {navigation}) => {
   const [photo, setPhoto] = useState(true);
-
+  const [camera, setCamera] = useState();
+  const [filepaths, setFilepath] = useState('')
   const onBottomButtonPressed = async event => {
-    const captureImages = JSON.stringify(event.captureImages);
-    console.log(captureImages[0]);
-    await props.navigation.navigate('EditPhoto', {ImgUri: captureImages});
+    // console.log(await camera.camera.capture().uri)
+    const captureImage = event.captureImages[0].uri;
+    console.log(captureImage);
+    // require the module
+    var RNGRP = require('react-native-get-real-path');
+    RNGRP.getRealPathFromURI(captureImage).then((filePath) =>
+      // console.log(filePath),
+      setFilepath(filePath),
+      props.navigation.navigate('Test', {ImgUri: filepaths})
+    );
   };
-  return photo === false ? (
+
+  return photo === true ? (
     <View style={styles.container}>
       {/* HEADER */}
       {/* Cross */}
@@ -33,6 +42,7 @@ const TakePhoto = (props, {navigation}) => {
       <CameraScreen
         // actions={{ rightButtonText: 'Done', leftButtonText: 'Cancel' }}
         onBottomButtonPressed={event => onBottomButtonPressed(event)}
+        ref={cam => setCamera(cam)}
         flashImages={{
           on: require('../../../../assets/flashOn.png'),
           off: require('../../../../assets/flashOffBlue.png'),
@@ -40,6 +50,8 @@ const TakePhoto = (props, {navigation}) => {
         }}
         cameraFlipImage={require('../../../../assets/flipCamBlue.png')}
         captureButtonImage={require('../../../../assets/shutterBtn.png')}
+        saveToCameraRoll={true}
+        saveToInternalStorage={true}
       />
       {/* SHUTTER BTN */}
       <View>

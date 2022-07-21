@@ -1,140 +1,154 @@
-import {StyleSheet, Text, View, Image, ImageBackground,TouchableOpacity} from 'react-native';
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ * @flow
+ */
+
 import React, {Component} from 'react';
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  TouchableOpacity,
+  ScrollView,
+  Platform,
+} from 'react-native';
+//  import { RNCamera } from 'react-native-camera';
 
-import RNSketchCanvas, {
-  SketchCanvas,
-} from '@terrylinla/react-native-sketch-canvas';
+import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
+import {SketchCanvas} from '@terrylinla/react-native-sketch-canvas';
+import ColorPicker from './ColorPicker';
 
-const Test = (props) => {
+export default class Test extends Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <View style={styles.container}>
-      <View style={{flex: 1, flexDirection: 'row'}}>
-        <ImageBackground
-          source={require('../../../../assets/editScreen1.png')}
-          style={{height: '100%', flex: 1}}>
-          <RNSketchCanvas
-            localSourceImage={{
-              filename: 'IMG_20220705_111249.jpg', // e.g. 'image.png' or '/storage/sdcard0/Pictures/image.png'
-              directory: '/storage/emulated/0/Pictures/', // e.g. SketchCanvas.MAIN_BUNDLE or '/storage/sdcard0/Pictures/'
-              mode: 'AspectFill',
-            }}
-            containerStyle={{flex: 1}}
-            canvasStyle={{backgroundColor: 'transparent', flex: 1}}
-            defaultStrokeIndex={0}
-            defaultStrokeWidth={5}
-            closeComponent={
+    this.state = {
+      example: 0,
+      color: '#FF0000',
+      thickness: 5,
+      message: '',
+      photoPath: null,
+      scrollEnabled: true,
+      // IMGDATA: props.route.params.ImgUri,
+    };
+    // console.log(props.route.params);
+  }
+  //  takePicture = async function () {
+  //    if (this.camera) {
+  //      const options = { quality: 0.5, base64: true };
+  //      const data = await this.camera.takePictureAsync(options)
+  //      this.setState({
+  //        photoPath: data.uri.replace('file://', '')
+  //      })
+  //    }
+  //  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={{flex: 1, flexDirection: 'row'}}>
+          <View style={{flex: 1, flexDirection: 'column'}}>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <TouchableOpacity
-              onPress={() => props.clsEditor(false)}
-                style={{
-                  backgroundColor: '#fff',
-                  borderRadius: 20,
-                  width: 30,
-                  height: 30,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginHorizontal: 10,
-                  marginVertical: 10,
+                style={styles.functionButton}
+                onPress={() => {
+                  this.setState({example: 0});
                 }}>
-                <Image source={require('../../../../assets/crossBlue.png')} />
+                <Text style={{color: 'white'}}>Close</Text>
               </TouchableOpacity>
-            }
-            undoComponent={
-              <View
-                style={{
-                  backgroundColor: '#fff',
-                  borderRadius: 20,
-                  width: 30,
-                  height: 30,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginHorizontal: 5,
-                  marginVertical: 10,
+              <ColorPicker/>
+              <TouchableOpacity
+                style={styles.functionButton}
+                onPress={() => {
+                  this.canvas.undo();
                 }}>
-                <Image source={require('../../../../assets/undoArrow.png')} />
+                <Text style={{color: 'white'}}>UNDO</Text>
+              </TouchableOpacity>
+            </View>
+            <SketchCanvas
+              localSourceImage={{
+                // filename: this.state.IMGDATA,
+                directory: SketchCanvas.MAIN_BUNDLE,
+                mode: 'AspectFit',
+              }}
+              // localSourceImage={{ filename: 'bulb.png', directory: RNSketchCanvas.MAIN_BUNDLE }}
+              ref={ref => (this.canvas = ref)}
+              style={{flex: 1}}
+              strokeColor={'#b8860b'}
+              strokeWidth={this.state.thickness}
+              onPathsChange={pathsCount => {
+                console.log('pathsCount', pathsCount);
+              }}
+              onSketchSaved={(success, path) => {
+                console.log(success, path);
+                Alert.alert(
+                  success ? 'Image saved!' : 'Failed to save image!',
+                  path,
+                );
+              }}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity
+                  style={[styles.functionButton, {backgroundColor: 'red'}]}
+                  onPress={() => {
+                    this.setState({color: '#FF0000'});
+                  }}>
+                  <Text style={{color: 'white'}}>Red</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.functionButton, {backgroundColor: 'black'}]}
+                  onPress={() => {
+                    this.setState({color: '#000000'});
+                  }}>
+                  <Text style={{color: 'white'}}>Black</Text>
+                </TouchableOpacity>
               </View>
-            }
-            // clearComponent={
-            //   <View style={styles.functionButton}>
-            //     <Text style={{color: 'white'}}>Clear</Text>
-            //   </View>
-            // }
-            // eraseComponent={
-            //   <View style={styles.functionButton}>
-            //     <Text style={{color: 'white'}}>Eraser</Text>
-            //   </View>
-            // }
-            // strokeComponent={color => (
-            //   <View
-            //     style={[{backgroundColor: 'red'}, styles.strokeColorButton]}
-            //   />
-            // )}
-            // strokeSelectedComponent={(color, index, changed) => {
-            //   return (
-            //     <View
-            //       style={[
-            //         {backgroundColor: color, borderWidth: 2},
-            //         styles.strokeColorButton,
-            //       ]}
-            //     />
-            //   );
-            // }}
-            // strokeWidthComponent={w => {
-            //   return (
-            //     <View style={styles.strokeWidthButton}>
-            //       <View
-            //         style={{
-            //           backgroundColor: 'white',
-            //           marginHorizontal: 2.5,
-            //           width: Math.sqrt(w / 3) * 10,
-            //           height: Math.sqrt(w / 3) * 10,
-            //           borderRadius: (Math.sqrt(w / 3) * 10) / 2,
-            //         }}
-            //       />
-            //     </View>
-            //   );
-            // }}
-            saveComponent={
+              <Text style={{marginRight: 8, fontSize: 20}}>
+                {this.state.message}
+              </Text>
               <TouchableOpacity
-                onPress={()=> {props.navigation.navigate('Images'),props.closeBtn(false)}}
-                style={{
-                  backgroundColor: '#2994FF',
-                  borderRadius: 40,
-                  width: 68,
-                  height: 68,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  // marginHorizontal: 5,
-                  // marginVertical:10,
-                  // position:'absolute',
-                  // borderWidth:10,
-                  top:0,
-                  left:0,
-                  right:0,
-                  bottom:0
+                style={[
+                  styles.functionButton,
+                  {backgroundColor: 'black', width: 90},
+                ]}
+                onPress={() => {
+                  console.log(
+                    'saveImg====>>>>',
+                    this.canvas.save(
+                      'jpg',
+                      false,
+                      'camera',
+                      'test',
+                      true,
+                      false,
+                      true,
+                    ),
+                  );
+                  // console.log('getPaths====>>>>', this.canvas.getPaths());
+                  // Alert.alert(JSON.stringify(this.canvas.getPaths()))
+                  // this.canvas.getBase64('jpg', false, true, true,false, (err, result) => {
+                  //   console.log(atob(result))
+                  // })
                 }}>
-                <Image source={require('../../../../assets/downloadWhite.png')} />
+                <Text style={{color: 'white'}}>SAVE</Text>
               </TouchableOpacity>
-            }
-            savePreference={() => {
-              return {
-                folder: 'RNSketchCanvas',
-                filename: String(Math.ceil(Math.random() * 10)),
-                transparent: false,
-                imageType: 'png',
-                includeImage: true,
-                includeText: false,
-                cropToImageSize: true,
-              };
-            }}
-          />
-        </ImageBackground>
+            </View>
+          </View>
+        </View>
       </View>
-    </View>
-  );
-};
-
-export default Test;
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -170,4 +184,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
   },
+  cameraContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: 'black',
+    alignSelf: 'stretch',
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  capture: {
+    flex: 0,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    padding: 15,
+    paddingHorizontal: 20,
+    alignSelf: 'center',
+    margin: 20,
+  },
+  page: {
+    flex: 1,
+    height: 300,
+    elevation: 2,
+    marginVertical: 8,
+    backgroundColor: 'white',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.75,
+    shadowRadius: 2,
+  },
 });
+
+AppRegistry.registerComponent('example', () => example);

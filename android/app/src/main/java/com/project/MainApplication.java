@@ -1,5 +1,5 @@
 package com.project;
-
+import com.rngrp.RNGRPPackage; // <---
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;

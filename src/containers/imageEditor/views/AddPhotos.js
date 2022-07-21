@@ -15,9 +15,9 @@ const AddPhotos = (props, {navigation}) => {
   const [first, setfirst] = useState(false);
   const [galImg, setGalImg] = useState(false);
   useEffect(() => {
-    checkPermissionCamera().then(() => {
+    checkPermissionCamera()
       checkPermissionStorage();
-    });
+   
   }, []);
 
   const checkPermissionStorage = async () => {
