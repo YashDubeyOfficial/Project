@@ -10,25 +10,27 @@ import {
 import React, {useEffect, useState} from 'react';
 import {CameraScreen} from 'react-native-camera-kit';
 import Test from './Test';
+import EditPhoto from './editPhoto';
 
-const TakePhoto = (props, {navigation}) => {
+const TakePhoto = (props) => {
   const [photo, setPhoto] = useState(true);
   const [camera, setCamera] = useState();
-  const [filepaths, setFilepath] = useState('')
+  const [ImgPath, setImgPath] = useState('')
   const onBottomButtonPressed = async event => {
-    // console.log(await camera.camera.capture().uri)
+    console.log(event)
     const captureImage = event.captureImages[0].uri;
     console.log(captureImage);
-    // require the module
+
+    // to take file path
     var RNGRP = require('react-native-get-real-path');
-    RNGRP.getRealPathFromURI(captureImage).then((filePath) =>
-      // console.log(filePath),
-      setFilepath(filePath),
-      props.navigation.navigate('Test', {ImgUri: filepaths})
+    await RNGRP.getRealPathFromURI(captureImage).then(async (filePath) =>
+    setImgPath(filePath),
+    await props.navigation.navigate('EditPhoto', {ImgUri: ImgPath})
     );
   };
+  console.log('ImgPath from camera screen===>>',ImgPath)
 
-  return photo === true ? (
+  return(
     <View style={styles.container}>
       {/* HEADER */}
       {/* Cross */}
@@ -60,13 +62,7 @@ const TakePhoto = (props, {navigation}) => {
         </TouchableOpacity>
       </View>
     </View>
-  ) : (
-    <Test
-      clsEditor={props.clsPhoto}
-      closeBtn={props.closeBtn}
-      navigation={props.navigation}
-    />
-  );
+  ) 
 };
 
 export default TakePhoto;
@@ -84,7 +80,6 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-
     position: 'absolute',
     zIndex: 1,
     marginHorizontal: 20,

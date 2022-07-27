@@ -12,12 +12,13 @@ import TakePhoto from './TakePhoto';
 import CustomCamRoll from './CustomCamRoll';
 
 const AddPhotos = (props, {navigation}) => {
+
   const [first, setfirst] = useState(false);
   const [galImg, setGalImg] = useState(false);
   useEffect(() => {
-    checkPermissionCamera()
+    checkPermissionCamera().then(() => {
       checkPermissionStorage();
-   
+    });
   }, []);
 
   const checkPermissionStorage = async () => {
@@ -80,7 +81,7 @@ const AddPhotos = (props, {navigation}) => {
         }}>
         <TouchableOpacity
           onPress={() => {
-            props.closeBtn(false)
+            props.closeBtn(false);
           }}>
           <Image source={require('../../../../assets/crosssky.png')} />
         </TouchableOpacity>
@@ -91,7 +92,6 @@ const AddPhotos = (props, {navigation}) => {
         <Text style={{fontSize: 30, fontWeight: '900', color: '#707070'}}>
           Add Photo(s)
         </Text>
-
         <Text
           style={{
             margin: 45,

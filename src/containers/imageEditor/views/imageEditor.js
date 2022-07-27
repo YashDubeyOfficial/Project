@@ -45,11 +45,14 @@ const Home = ({navigation}) => {
   const [Img, setImg] = useState([]);
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  // console.log('parent==>>', modal)
+  console.log('parent==>>', modal)
   // console.log('parent')
+  useEffect(() => {
+  }, [modal])
+  
   return (
     <ScrollView>
-      <View style={modal ? styles.containerOff : styles.containerOn}>
+      <View style={styles.containerOn}>
         {/* >Image Editor */}
         <View style={styles.header1}>
           <Text style={styles.header1Text}>Image Editor</Text>
@@ -73,9 +76,9 @@ const Home = ({navigation}) => {
                 setModal(false);
               }}>
               <AddPhotos
-                navigation={navigation}
                 closeBtn={setModal}
                 addImg={setImg}
+                navigation={navigation}
               />
             </Modal>
           </View>

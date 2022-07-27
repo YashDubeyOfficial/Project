@@ -17,19 +17,12 @@ const StackNavigation = ({navigation}) => {
   return (
     <Stack.Navigator>
       {/* <Stack.Screen
-        name="Test"
-        component={Test}
+        name="EditPhot"
+        component={EditPhoto}
         options={{
           headerShown: false,
         }}
       /> */}
-      <Stack.Screen
-        name="ColorPickers"
-        component={ColorPickers}
-        options={{
-          headerShown: false,
-        }}
-      />
       <Stack.Screen
         name="imageEditor"
         component={imageEditor}
@@ -52,19 +45,26 @@ const StackNavigation = ({navigation}) => {
         }}
       />
       <Stack.Screen
-        name="Images"
-        component={Images}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
         name="EditPhoto"
         component={EditPhoto}
         options={{
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="Images"
+        component={Images}
+        options={{
+          headerShown: false,
+        }}
+      />
+      {/* <Stack.Screen
+        name="Test"
+        component={Test}
+        options={{
+          headerShown: false,
+        }}
+      /> */}
       <Stack.Screen
         name="CustomCamRoll"
         component={CustomCamRoll}

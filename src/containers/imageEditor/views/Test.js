@@ -1,218 +1,153 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+// HORIZONTALLLLLLL
 
-import React, {Component} from 'react';
+
+import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import React, {useState} from 'react';
+import {LogBox} from 'react-native';
+
+import LinearGradient from 'react-native-linear-gradient';
 import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View,
-  Alert,
-  TouchableOpacity,
-  ScrollView,
-  Platform,
-} from 'react-native';
-//  import { RNCamera } from 'react-native-camera';
+  GestureHandlerRootView,
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+  TapGestureHandler,
+  TapGestureHandlerGestureEvent,
+} from 'react-native-gesture-handler';
+import Animated, {
+  interpolateColor,
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 
-import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
-import {SketchCanvas} from '@terrylinla/react-native-sketch-canvas';
-import ColorPicker from './ColorPicker';
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const PICKER_WIDTH = SCREEN_WIDTH * 0.6;
+const CIRCLE_PICKER_SIZE = 45;
+const INTERNAL_PICKER_SIZE = CIRCLE_PICKER_SIZE / 2;
+// console.log('PICKER_WIDTH',PICKER_WIDTH)
 
-export default class Test extends Component {
-  constructor(props) {
-    super(props);
+const Test = (props) => {
+  LogBox.ignoreLogs([
+    'ViewPropTypes will be removed',
+    'ColorPropType will be removed',
+  ]);
+  const COLORS = [
+    '#FFFFFF',
+    '#FF7A00',
+    '#F7FC00',
+    '#F5FA00',
+    '#FF0000',
+    '#4FF800',
+    '#00A2FD',
+    '#7000FF',
+    '#000000',
+  ];
 
-    this.state = {
-      example: 0,
-      color: '#FF0000',
-      thickness: 5,
-      message: '',
-      photoPath: null,
-      scrollEnabled: true,
-      // IMGDATA: props.route.params.ImgUri,
-    };
-    // console.log(props.route.params);
-  }
-  //  takePicture = async function () {
-  //    if (this.camera) {
-  //      const options = { quality: 0.5, base64: true };
-  //      const data = await this.camera.takePictureAsync(options)
-  //      this.setState({
-  //        photoPath: data.uri.replace('file://', '')
-  //      })
-  //    }
-  //  };
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
+  const scale = useSharedValue(1);
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <View style={{flex: 1, flexDirection: 'row'}}>
-          <View style={{flex: 1, flexDirection: 'column'}}>
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <TouchableOpacity
-                style={styles.functionButton}
-                onPress={() => {
-                  this.setState({example: 0});
-                }}>
-                <Text style={{color: 'white'}}>Close</Text>
-              </TouchableOpacity>
-              <ColorPicker/>
-              <TouchableOpacity
-                style={styles.functionButton}
-                onPress={() => {
-                  this.canvas.undo();
-                }}>
-                <Text style={{color: 'white'}}>UNDO</Text>
-              </TouchableOpacity>
-            </View>
-            <SketchCanvas
-              localSourceImage={{
-                // filename: this.state.IMGDATA,
-                directory: SketchCanvas.MAIN_BUNDLE,
-                mode: 'AspectFit',
-              }}
-              // localSourceImage={{ filename: 'bulb.png', directory: RNSketchCanvas.MAIN_BUNDLE }}
-              ref={ref => (this.canvas = ref)}
-              style={{flex: 1}}
-              strokeColor={'#b8860b'}
-              strokeWidth={this.state.thickness}
-              onPathsChange={pathsCount => {
-                console.log('pathsCount', pathsCount);
-              }}
-              onSketchSaved={(success, path) => {
-                console.log(success, path);
-                Alert.alert(
-                  success ? 'Image saved!' : 'Failed to save image!',
-                  path,
-                );
-              }}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-              <View style={{flexDirection: 'row'}}>
-                <TouchableOpacity
-                  style={[styles.functionButton, {backgroundColor: 'red'}]}
-                  onPress={() => {
-                    this.setState({color: '#FF0000'});
-                  }}>
-                  <Text style={{color: 'white'}}>Red</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.functionButton, {backgroundColor: 'black'}]}
-                  onPress={() => {
-                    this.setState({color: '#000000'});
-                  }}>
-                  <Text style={{color: 'white'}}>Black</Text>
-                </TouchableOpacity>
-              </View>
-              <Text style={{marginRight: 8, fontSize: 20}}>
-                {this.state.message}
-              </Text>
-              <TouchableOpacity
-                style={[
-                  styles.functionButton,
-                  {backgroundColor: 'black', width: 90},
-                ]}
-                onPress={() => {
-                  console.log(
-                    'saveImg====>>>>',
-                    this.canvas.save(
-                      'jpg',
-                      false,
-                      'camera',
-                      'test',
-                      true,
-                      false,
-                      true,
-                    ),
-                  );
-                  // console.log('getPaths====>>>>', this.canvas.getPaths());
-                  // Alert.alert(JSON.stringify(this.canvas.getPaths()))
-                  // this.canvas.getBase64('jpg', false, true, true,false, (err, result) => {
-                  //   console.log(atob(result))
-                  // })
-                }}>
-                <Text style={{color: 'white'}}>SAVE</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </View>
+  const adjustedTranslateX = useDerivedValue(() => {
+    return Math.min(
+      Math.max(translateY.value, 0),
+      PICKER_WIDTH - CIRCLE_PICKER_SIZE,
     );
-  }
-}
+  });
+
+  const panGestureEvent = useAnimatedGestureHandler({
+    onStart: (_, context) => {
+      context.x = adjustedTranslateX.value;
+      translateX.value = withTiming(8);
+      scale.value = withTiming(1);
+    },
+    onActive: (event, context) => {
+      translateY.value = event.translationY + context.x;
+    },
+    onEnd: () => {
+      translateX.value = withTiming(-20);
+      scale.value = withTiming(0);
+    },
+  });
+
+  const rStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {translateX: adjustedTranslateX.value},
+        {translateY: translateX.value},
+        {scale: scale.value},
+      ],
+    };
+  });
+
+  const rInternalPickerStyle = useAnimatedStyle(() => {
+    const inputRange = COLORS.map(
+      (_, index) => (index / COLORS.length) * PICKER_WIDTH,
+    );
+
+    const backgroundColor = interpolateColor(
+      translateY.value,
+      inputRange,
+      COLORS,
+    );
+
+    // props.setCurrentColor(backgroundColor);
+    return {
+      backgroundColor,
+    };
+  });
+  return (
+    <GestureHandlerRootView style={{flex: 1}}>
+      <PanGestureHandler onGestureEvent={panGestureEvent}>
+        <Animated.View style={styles.container}>
+          <LinearGradient
+            colors={COLORS}
+            style={styles.linearGradient}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+          />
+          <Animated.View style={[styles.picker, rStyle]}>
+            <Animated.View
+              style={[styles.internalPicker, rInternalPickerStyle]}
+            />
+          </Animated.View>
+        </Animated.View>
+      </PanGestureHandler>
+    </GestureHandlerRootView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#F6CEFC',
+    // transform: [{rotate: '90deg'}],
   },
-  strokeColorButton: {
-    marginHorizontal: 2.5,
-    marginVertical: 8,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+  linearGradient: {
+    borderRadius: 20,
+    height: 10,
+    width: PICKER_WIDTH,
   },
-  strokeWidthButton: {
-    marginHorizontal: 2.5,
-    marginVertical: 8,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#39579A',
-  },
-  functionButton: {
-    marginHorizontal: 2.5,
-    marginVertical: 8,
-    height: 30,
-    width: 60,
-    backgroundColor: '#39579A',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-  },
-  cameraContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'black',
-    alignSelf: 'stretch',
-  },
-  preview: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  capture: {
-    flex: 0,
+  picker: {
+    position: 'absolute',
     backgroundColor: '#fff',
-    borderRadius: 5,
-    padding: 15,
-    paddingHorizontal: 20,
-    alignSelf: 'center',
-    margin: 20,
+    width: CIRCLE_PICKER_SIZE,
+    height: CIRCLE_PICKER_SIZE,
+    borderRadius: CIRCLE_PICKER_SIZE / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // left: 0,
   },
-  page: {
-    flex: 1,
-    height: 300,
-    elevation: 2,
-    marginVertical: 8,
-    backgroundColor: 'white',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.75,
-    shadowRadius: 2,
+  internalPicker: {
+    width: INTERNAL_PICKER_SIZE,
+    height: INTERNAL_PICKER_SIZE,
+    borderRadius: INTERNAL_PICKER_SIZE / 2,
+    borderWidth: 1.0,
+    borderColor: 'rgba(0,0,0,0.2)',
   },
 });
 
-AppRegistry.registerComponent('example', () => example);
+export default Test;
