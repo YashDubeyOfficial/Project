@@ -16,13 +16,6 @@ const Stack = createNativeStackNavigator();
 const StackNavigation = ({navigation}) => {
   return (
     <Stack.Navigator>
-      {/* <Stack.Screen
-        name="EditPhot"
-        component={EditPhoto}
-        options={{
-          headerShown: false,
-        }}
-      /> */}
       <Stack.Screen
         name="imageEditor"
         component={imageEditor}

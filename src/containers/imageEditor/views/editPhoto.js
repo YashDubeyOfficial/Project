@@ -11,25 +11,38 @@ import {
   SafeAreaView,
   Dimensions,
 } from 'react-native';
-import React, {useEffect, useState, useRef,useCallback} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {SketchCanvas} from '@terrylinla/react-native-sketch-canvas';
 import ColorPicker from './ColorPicker';
-import {clockRunning} from 'react-native-reanimated';
-import Test from './Test';
+import {useSharedValue} from 'react-native-reanimated';
 
 const EditPhoto = props => {
+  const COLORS = [
+    '#FFFFFF',
+    '#FF7A00',
+    '#F7FC00',
+    '#F5FA00',
+    '#FF0000',
+    '#4FF800',
+    '#00A2FD',
+    '#7000FF',
+    '#000000',
+  ];
   const [currentColor, setCurrentColor] = useState('');
   const [thickness, setThickness] = useState(5);
   const [message, setMessage] = useState('');
-  const [IMGDATA, setIMGDATA] = useState();
-  // props.route.params.ImgUri
+  const [IMGDATA, setIMGDATA] = useState(props.route.params.ImgUri);
 
+  console.log('ImgUri===>>', props.route.params);
   const imgCanvas = useRef(SketchCanvas);
-  // console.log('canvas', imgCanvas);
+  // console.log(imgCanvas)
+  const pickedColor = useSharedValue(COLORS[0]);
 
-  const onColorChanged = useCallback((color)=>{
-    setCurrentColor(color)
-  })
+  const onColorChanged = useCallback(color => {
+    'worklet';
+    // console.log('color',color)
+    setCurrentColor(color);
+  });
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -65,41 +78,41 @@ const EditPhoto = props => {
       </View>
 
       <SketchCanvas
-        // localSourceImage={{
-        //   filename: IMGDATA,
-        //   directory: SketchCanvas.MAIN_BUNDLE,
-        //   mode: 'AspectFit',
-        // }}
+        localSourceImage={{
+          filename: IMGDATA,
+          directory: SketchCanvas.MAIN_BUNDLE,
+          mode: 'AspectFill',
+        }}
         ref={imgCanvas}
         style={{flex: 1}}
         // strokeColor={currentColor}
-        strokeColor={'#abcdef'}
+        strokeColor={'#a34def'}
         strokeWidth={thickness}
         onPathsChange={pathsCount => {
           console.log('pathsCount', pathsCount);
         }}
         onSketchSaved={(success, path) => {
-          console.log(success, path);
-          Alert.alert(success ? 'Image saved!' : 'Failed to save image!', path);
+          // console.log(success, path);
+          // Alert.alert(success ? 'Image saved!' : 'Failed to save image!', path);
         }}
       />
 
-      <View
-        style={{
-          position: 'absolute',
-          left:270,
-          top: 145,
-          transform: [{rotate: '90deg'}],
-        }}>
-        <ColorPicker  onColorChanged={onColorChanged}/>
+      <View style={styles.colorPicker}>
+        <ColorPicker onColorChanged={onColorChanged} />
       </View>
       <TouchableOpacity
         style={styles.saveBtn}
         onPress={() => {
-          console.log(
-            'saveImg====>>>>',
-            imgCanvas.current.save('jpg', false, 'camera', 'test', true, false, true),
+          imgCanvas.current.save(
+            'jpg',
+            false,
+            'ConstructAI',
+            String(Math.ceil(Math.random() * 100000000)),
+            true,
+            true,
+            true,
           );
+          props.navigation.navigate('Images');
         }}>
         <Image source={require('../../../../assets/downloadWhite.png')} />
       </TouchableOpacity>
@@ -114,9 +127,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-   
   },
   header: {
+    // borderWidth: 3,
     flexDirection: 'row',
     zIndex: 1,
     top: 10,
@@ -170,6 +183,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 1, // IOS
     shadowRadius: 1, //IOS
     elevation: 9, // Android,
+  },
+  colorPicker: {
+    position: 'absolute',
+    left: 270,
+    top: 145,
+    transform: [{rotate: '90deg'}],
   },
   saveBtn: {
     height: 68,

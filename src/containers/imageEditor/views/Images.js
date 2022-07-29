@@ -5,55 +5,68 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  Modal
+  Modal,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import AddPhotos from './AddPhotos';
-
+import CameraRoll from '@react-native-community/cameraroll';
 import {LogBox} from 'react-native';
+import {CommonActions} from '@react-navigation/native';
 
 const Images = ({navigation}) => {
-  // console.log('navigation',navigation)
+  // console.log(navigation);
   LogBox.ignoreLogs([
     "ViewPropTypes will be removed from React Native. Migrate to ViewPropTypes exported from 'deprecated-react-native-prop-types'.",
   ]);
-  const dummyData = [
-    {
-      key: 1,
-      pic: require('../../../../assets/dummyLeftImg.png'),
-    },
-    {
-      key: 2,
-      pic: require('../../../../assets/dummyLeftImg.png'),
-    },
-    {
-      key: 3,
-      pic: require('../../../../assets/dummyLeftImg.png'),
-    },
-    {
-      key: 4,
-      pic: require('../../../../assets/dummyLeftImg.png'),
-    },
-    {
-      key: 5,
-      pic: require('../../../../assets/dummyLeftImg.png'),
-    },
-  ];
+
+  useEffect(() => {
+    getPhotos();
+  }, []);
+
+  const [data, setData] = useState([]);
   const [modal, setModal] = useState(false);
+
+  const getPhotos = async () => {
+    const photos = await CameraRoll.getPhotos({
+      first: 200,
+      groupName: 'ConstructAI',
+    });
+
+    setData(photos.edges.map(edge => edge.node));
+  };
+
+  const handleDelPhoto = async () => {
+    const del = await CameraRoll.deletePhotos([
+      (uri = 'file:///storage/emulated/0/Pictures/test.jpg'),
+    ]);
+    console.log(del);
+  };
+
   return (
     <ScrollView>
       <View style={modal ? styles.containerOff : styles.containerOn}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={()=>navigation.goBack('imageEditor')}>
+          <TouchableOpacity onPress={() => navigation.goBack('imageEditor')}>
             <Image source={require('../../../../assets/crosssky.png')} />
           </TouchableOpacity>
           <View style={{position: 'absolute', bottom: 5, left: 120}}>
             <Text
-              style={{fontWeight: '900', fontSize: 30, textAlign: 'center',color:'#707070'}}>
+              style={{
+                fontWeight: '900',
+                fontSize: 30,
+                textAlign: 'center',
+                color: '#707070',
+              }}>
               Images
             </Text>
           </View>
-          <TouchableOpacity >
+          <TouchableOpacity
+            onPress={() =>
+              navigation.dispatch(
+                CommonActions.navigate({
+                  name: 'imageEditor',
+                }),
+              )
+            }>
             <Text
               style={{
                 fontWeight: '500',
@@ -68,9 +81,9 @@ const Images = ({navigation}) => {
         {/* ADD IMAGE BTN*/}
         <View>
           <TouchableOpacity
-            onPress={() => 
-            // setModal(true)
-            navigation.navigate('AddPhotos')
+            onPress={() =>
+              // setModal(true)
+              navigation.navigate('AddPhotos')
             }
             style={{
               flexDirection: 'row',
@@ -105,16 +118,18 @@ const Images = ({navigation}) => {
         </View>
 
         {/* IMAGES */}
-        {dummyData.map(item => {
+        {data.map(item => {
+          console.log('imgDat==>>', item);
           return (
-            <View key={item.key} style={styles.ImgCard}>
+            <View key={item.modified} style={styles.ImgCard}>
               <View style={styles.ImgView}>
                 <Image
                   style={{width: '100%', height: 385}}
-                  source={require('../../../../assets/dummyLeftImg.png')}
+                  source={{uri: item.image.uri}}
                 />
                 <View style={styles.CrossBtn}>
                   <TouchableOpacity
+                    onPress={handleDelPhoto}
                     style={{
                       backgroundColor: '#fff',
                       height: 30,

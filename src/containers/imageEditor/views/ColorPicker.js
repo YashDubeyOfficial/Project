@@ -1,8 +1,7 @@
 // HORIZONTALLLLLLL
 
-
 import {StyleSheet, Text, View, Dimensions} from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {LogBox} from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -27,9 +26,10 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const PICKER_WIDTH = SCREEN_WIDTH * 0.5;
 const CIRCLE_PICKER_SIZE = 35;
 const INTERNAL_PICKER_SIZE = CIRCLE_PICKER_SIZE / 2;
-// console.log('PICKER_WIDTH',PICKER_WIDTH)
 
-const ColorPicker = (props) => {
+const ColorPicker = props => {
+  const [currentColor, setCurrentColor] = useState('');
+
   LogBox.ignoreLogs([
     'ViewPropTypes will be removed',
     'ColorPropType will be removed',
@@ -92,10 +92,7 @@ const ColorPicker = (props) => {
       inputRange,
       COLORS,
     );
-
-    // props.onColorChanged(backgroundColor);
-    // console.log(backgroundColor)
-
+    // setCurrentColor(backgroundColor)
     return {
       backgroundColor,
     };
@@ -145,9 +142,9 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    transform: [{ rotateY: '45deg' }]
-},
-internalPicker: {
+    transform: [{rotateY: '45deg'}],
+  },
+  internalPicker: {
     width: INTERNAL_PICKER_SIZE,
     height: INTERNAL_PICKER_SIZE,
     borderRadius: INTERNAL_PICKER_SIZE / 2,

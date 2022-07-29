@@ -12,25 +12,24 @@ import {CameraScreen} from 'react-native-camera-kit';
 import Test from './Test';
 import EditPhoto from './editPhoto';
 
-const TakePhoto = (props) => {
+const TakePhoto = props => {
   const [photo, setPhoto] = useState(true);
   const [camera, setCamera] = useState();
-  const [ImgPath, setImgPath] = useState('')
+  const [ImgPath, setImgPath] = useState('');
   const onBottomButtonPressed = async event => {
-    console.log(event)
     const captureImage = event.captureImages[0].uri;
-    console.log(captureImage);
-
-    // to take file path
-    var RNGRP = require('react-native-get-real-path');
-    await RNGRP.getRealPathFromURI(captureImage).then(async (filePath) =>
-    setImgPath(filePath),
-    await props.navigation.navigate('EditPhoto', {ImgUri: ImgPath})
-    );
+    console.log(event.captureImages.map(item=>item))
+    var RNGRP = require('react-native-get-real-path'); //to get file path from uri
+    RNGRP.getRealPathFromURI(captureImage).then(filePath => {
+      // setImgPath(filePath);
+      setTimeout(() => {
+        props.navigation.navigate('EditPhoto', {ImgUri: filePath});
+      }, 3000);
+    });
   };
-  console.log('ImgPath from camera screen===>>',ImgPath)
+  console.log('ImgPath from camera screen===>>', ImgPath);
 
-  return(
+  return (
     <View style={styles.container}>
       {/* HEADER */}
       {/* Cross */}
@@ -62,7 +61,7 @@ const TakePhoto = (props) => {
         </TouchableOpacity>
       </View>
     </View>
-  ) 
+  );
 };
 
 export default TakePhoto;
