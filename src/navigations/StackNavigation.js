@@ -16,6 +16,20 @@ const Stack = createNativeStackNavigator();
 const StackNavigation = ({navigation}) => {
   return (
     <Stack.Navigator>
+     <Stack.Screen
+        name="Images"
+        component={Images}
+        options={{
+          headerShown: false,
+        }}
+      />
+    {/* <Stack.Screen
+      name="Test"
+      component={Test}
+      options={{
+        headerShown: false,
+      }}
+    /> */}
       <Stack.Screen
         name="imageEditor"
         component={imageEditor}
@@ -45,26 +59,13 @@ const StackNavigation = ({navigation}) => {
         }}
       />
       <Stack.Screen
-        name="Images"
-        component={Images}
-        options={{
-          headerShown: false,
-        }}
-      />
-      {/* <Stack.Screen
-        name="Test"
-        component={Test}
-        options={{
-          headerShown: false,
-        }}
-      /> */}
-      <Stack.Screen
         name="CustomCamRoll"
         component={CustomCamRoll}
         options={{
           headerShown: false,
         }}
       />
+       
     </Stack.Navigator>
   );
 };

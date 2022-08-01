@@ -18,7 +18,7 @@ const TakePhoto = props => {
   const [ImgPath, setImgPath] = useState('');
   const onBottomButtonPressed = async event => {
     const captureImage = event.captureImages[0].uri;
-    console.log(event.captureImages.map(item=>item))
+    console.log(event.captureImages.map(item => item));
     var RNGRP = require('react-native-get-real-path'); //to get file path from uri
     RNGRP.getRealPathFromURI(captureImage).then(filePath => {
       // setImgPath(filePath);
@@ -28,13 +28,15 @@ const TakePhoto = props => {
     });
   };
   console.log('ImgPath from camera screen===>>', ImgPath);
-
   return (
     <View style={styles.container}>
       {/* HEADER */}
       {/* Cross */}
       <TouchableOpacity
-        onPress={() => props.clsPhoto(false)}
+        onPress={() => 
+        // props.clsPhoto(false)
+        props.navigation.goBack()
+        }
         style={styles.headerBtn}>
         <Image source={require('../../../../assets/crossBlue.png')} />
       </TouchableOpacity>

@@ -11,7 +11,7 @@ import React, {useState, useEffect} from 'react';
 import CameraRoll from '@react-native-community/cameraroll';
 import {LogBox} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
-
+import AddPhotos from './AddPhotos';
 const Images = ({navigation}) => {
   // console.log(navigation);
   LogBox.ignoreLogs([
@@ -38,14 +38,26 @@ const Images = ({navigation}) => {
     const del = await CameraRoll.deletePhotos([
       (uri = 'file:///storage/emulated/0/Pictures/test.jpg'),
     ]);
-    console.log(del);
+    // console.log(del);
   };
 
   return (
     <ScrollView>
-      <View style={modal ? styles.containerOff : styles.containerOn}>
+      <View
+        style={
+          // modal ?
+          styles.containerOn
+          //  : styles.containerOff
+        }>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack('imageEditor')}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.dispatch(
+                CommonActions.navigate({
+                  name: 'imageEditor',
+                }),
+              )
+            }>
             <Image source={require('../../../../assets/crosssky.png')} />
           </TouchableOpacity>
           <View style={{position: 'absolute', bottom: 5, left: 120}}>
@@ -81,9 +93,9 @@ const Images = ({navigation}) => {
         {/* ADD IMAGE BTN*/}
         <View>
           <TouchableOpacity
-            onPress={() =>
-              // setModal(true)
-              navigation.navigate('AddPhotos')
+            onPress={
+              () => setModal(true)
+              // navigation.navigate('AddPhotos')
             }
             style={{
               flexDirection: 'row',
@@ -103,7 +115,7 @@ const Images = ({navigation}) => {
 
             <Text style={{color: 'white'}}>Add Image(s)</Text>
           </TouchableOpacity>
-          {/* <Modal
+          <Modal
             animationType="slide"
             transparent={true}
             visible={modal}
@@ -111,15 +123,15 @@ const Images = ({navigation}) => {
             onRequestClose={() => {
               setModal(false);
             }}>
-            <AddPhotos
-              closeBtn={setModal}
-            />
-          </Modal> */}
+            <AddPhotos closeBtn={setModal} navigation={navigation} />
+          </Modal>
         </View>
 
         {/* IMAGES */}
         {data.map(item => {
-          console.log('imgDat==>>', item);
+          {
+            console.log('imgDat==>>', item);
+          }
           return (
             <View key={item.modified} style={styles.ImgCard}>
               <View style={styles.ImgView}>
@@ -146,6 +158,12 @@ const Images = ({navigation}) => {
               </View>
               <View style={styles.EditBtn}>
                 <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('EditPhoto', {
+                      ImgUri:
+                        '/storage/emulated/0/Pictures/IMG_1659355300864.jpg',
+                    });
+                  }}
                   style={{
                     backgroundColor: '#152766',
                     alignItems: 'center',

@@ -12,7 +12,7 @@ import TakePhoto from './TakePhoto';
 import CustomCamRoll from './CustomCamRoll';
 
 const AddPhotos = (props, {navigation}) => {
-
+  console.log(props)
   const [first, setfirst] = useState(false);
   const [galImg, setGalImg] = useState(false);
   useEffect(() => {
@@ -104,6 +104,7 @@ const AddPhotos = (props, {navigation}) => {
         </Text>
       </View>
 
+      {/* ADD A PHOTO  */}
       <TouchableOpacity
         onPress={() =>
           // props.navigation.navigate('CustomCamRoll')
@@ -139,6 +140,7 @@ const AddPhotos = (props, {navigation}) => {
         {/* <TakePhoto clsPhoto={setfirst} /> */}
       </Modal>
 
+      {/* Take a photo */}
       <TouchableOpacity
         style={{
           justifyContent: 'center',
@@ -151,11 +153,13 @@ const AddPhotos = (props, {navigation}) => {
           marginBottom: 20,
         }}
         onPress={() => {
-          setfirst(true);
+          // setfirst(true);
+          props.closeBtn(false);
+          props.navigation.navigate('TakePhoto')
         }}>
         <Text style={{color: 'white'}}>Take a photo</Text>
       </TouchableOpacity>
-
+{/* 
       <Modal
         animationType="slide"
         transparent={false}
@@ -168,7 +172,7 @@ const AddPhotos = (props, {navigation}) => {
           clsPhoto={setfirst}
           navigation={props.navigation}
         />
-      </Modal>
+      </Modal> */}
     </View>
   );
 };

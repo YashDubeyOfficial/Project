@@ -16,7 +16,8 @@ import {SketchCanvas} from '@terrylinla/react-native-sketch-canvas';
 import ColorPicker from './ColorPicker';
 import {useSharedValue} from 'react-native-reanimated';
 
-const EditPhoto = props => {
+const EditPhoto = (props,{navigation}) => {
+// console.log(props.navigation)
   const COLORS = [
     '#FFFFFF',
     '#FF7A00',
@@ -33,9 +34,8 @@ const EditPhoto = props => {
   const [message, setMessage] = useState('');
   const [IMGDATA, setIMGDATA] = useState(props.route.params.ImgUri);
 
-  console.log('ImgUri===>>', props.route.params);
+  console.log('ImgUri===>>',  IMGDATA);
   const imgCanvas = useRef(SketchCanvas);
-  // console.log(imgCanvas)
   const pickedColor = useSharedValue(COLORS[0]);
 
   const onColorChanged = useCallback(color => {
@@ -50,9 +50,9 @@ const EditPhoto = props => {
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.closeBtn}
-          // onPress={() => {
-          //   this.setState({example: 0});
-          // }}
+          onPress={() => {
+            props.navigation.goBack()
+          }}
         >
           <Image source={require('../../../../assets/crossBlue.png')} />
         </TouchableOpacity>

@@ -13,43 +13,57 @@ import React, {useState, useEffect} from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
 import AddPhotos from './AddPhotos';
 import {LogBox} from 'react-native';
+import CameraRoll from '@react-native-community/cameraroll';
+import {clockRunning} from 'react-native-reanimated';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const Home = ({navigation}) => {
   LogBox.ignoreLogs([
     "ViewPropTypes will be removed from React Native. Migrate to ViewPropTypes exported from 'deprecated-react-native-prop-types'.",
   ]);
 
-  const dummyData = [
-    {
-      key: 1,
-      pic: require('../../../../assets/dummyLeftImg.png'),
-    },
-    {
-      key: 2,
-      pic: require('../../../../assets/Dp1.png'),
-    },
-    {
-      key: 3,
-      pic: require('../../../../assets/dummyLeftImg.png'),
-    },
-    {
-      key: 4,
-      pic: require('../../../../assets/dp3.png'),
-    },
-    {
-      key: 5,
-      pic: require('../../../../assets/dummyLeftImg.png'),
-    },
-  ];
+  // const dummyData = [
+  //   {
+  //     key: 1,
+  //     pic: require('../../../../assets/dummyLeftImg.png'),
+  //   },
+  //   {
+  //     key: 2,
+  //     pic: require('../../../../assets/Dp1.png'),
+  //   },
+  //   {
+  //     key: 3,
+  //     pic: require('../../../../assets/dummyLeftImg.png'),
+  //   },
+  //   {
+  //     key: 4,
+  //     pic: require('../../../../assets/dp3.png'),
+  //   },
+  //   {
+  //     key: 5,
+  //     pic: require('../../../../assets/dummyLeftImg.png'),
+  //   },
+  // ];
+  const getPhotos = async () => {
+    const photos = await CameraRoll.getPhotos({
+      first: 5,
+      groupName: 'ConstructAI',
+    });
+
+    setData(photos.edges.map(edge => edge.node));
+  };
+
+  const [data, setData] = useState([]);
   const [modal, setModal] = useState(false);
   const [Img, setImg] = useState([]);
-  const windowWidth = Dimensions.get('window').width;
-  const windowHeight = Dimensions.get('window').height;
-  console.log('parent==>>', modal)
+  // console.log('parent==>>', data);
   // console.log('parent')
   useEffect(() => {
-  }, [modal])
-  
+    getPhotos();
+  }, []);
+
   return (
     <ScrollView>
       <View style={styles.containerOn}>
@@ -57,12 +71,14 @@ const Home = ({navigation}) => {
         <View style={styles.header1}>
           <Text style={styles.header1Text}>Image Editor</Text>
         </View>
-        {/* Add Picture(s): Optional< */}
+
+        {/* Add Picture(s): Optional */}
         <View style={styles.header2}>
           <Text style={styles.header2Text}>Add Picture(s): Optional</Text>
         </View>
+
         {/* ADD NEW IMG VIEW */}
-        <View style={styles.gallery}>
+        <View style={styles.addNewImg}>
           <View style={styles.addImg}>
             <TouchableOpacity onPress={() => setModal(true)}>
               <Image source={require('../../../../assets/pulsBlueBtn.png')} />
@@ -77,20 +93,46 @@ const Home = ({navigation}) => {
               }}>
               <AddPhotos
                 closeBtn={setModal}
-                addImg={setImg}
+                // addImg={setImg}
                 navigation={navigation}
               />
             </Modal>
           </View>
+
           {/* addedImg */}
-          {dummyData.map(item => {
+          {data.map((item, index) => {
+            {
+              /* console.log(index); */
+            }
             return (
-              <View key={item.key} style={styles.addedImg}>
-                <Image source={item.pic} />
+              <View key={item.timestamp} style={styles.addedImg}>
+                <Image
+                  // source={item.pic}
+                  source={{uri: item.image.uri}}
+                  style={[
+                    index % 2 == 0 ? styles.addedImgOdd : styles.addedImgEve,
+                    index === 4 ? styles.addedLstImg : null,
+                  ]} //dynamic
+                />
+                {index === 4 ? (
+                  <Text
+                    style={{
+                      color: '#fff',
+                      position: 'absolute',
+                      alignSelf:'center',
+                      fontWeight:'bold',
+                      fontSize:20,
+
+                    }}>
+                    + 5 others
+                  </Text>
+                ) : null}
               </View>
             );
           })}
         </View>
+
+        {/* FINISH BTN */}
         <View
           style={{
             justifyContent: 'center',
@@ -140,7 +182,7 @@ const styles = StyleSheet.create({
     color: '#707070',
   },
   header2: {
-    marginTop: 18,
+    marginTop: 35,
     marginLeft: 10,
   },
   header2Text: {
@@ -148,19 +190,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#707070',
   },
-  gallery: {
-    // borderWidth: 5,
-    borderColor: '#a4f2a3',
+  addNewImg: {
+    // borderWidth: 1,
+    borderColor: 'red',
     marginTop: 76,
     felx: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around', //X-axis
     alignItems: 'center',
   },
   addImg: {
     borderWidth: 1,
-    marginLeft: 25,
+    marginLeft: SCREEN_WIDTH * 0.05,
     borderColor: '#2994FF',
     borderStyle: 'dashed',
     width: 134,
@@ -169,9 +211,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   addedImg: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 193,
-    height: 143,
+    // borderWidth:1,
+    justifyContent: 'center', //Y-axis
+    marginVertical: 18,
+    marginLeft: SCREEN_WIDTH * 0.05,
+  },
+  addedImgOdd: {
+    height: 131,
+    width: 196,
+  },
+  addedImgEve: {
+    height: 131,
+    width: 131,
+  },
+  addedLstImg: {
+    opacity: 0.5,
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
 });
