@@ -12,7 +12,7 @@ import TakePhoto from './TakePhoto';
 import CustomCamRoll from './CustomCamRoll';
 
 const AddPhotos = (props, {navigation}) => {
-  console.log(props)
+  // console.log(props)
   const [first, setfirst] = useState(false);
   const [galImg, setGalImg] = useState(false);
   useEffect(() => {

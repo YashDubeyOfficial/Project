@@ -12,6 +12,7 @@ import CameraRoll from '@react-native-community/cameraroll';
 import {LogBox} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import AddPhotos from './AddPhotos';
+import { clockRunning } from 'react-native-reanimated';
 const Images = ({navigation}) => {
   // console.log(navigation);
   LogBox.ignoreLogs([
@@ -33,10 +34,10 @@ const Images = ({navigation}) => {
 
     setData(photos.edges.map(edge => edge.node));
   };
-
-  const handleDelPhoto = async () => {
+  const handleDelPhoto = async (photoUri) => {
+    console.log(photoUri)
     const del = await CameraRoll.deletePhotos([
-      (uri = 'file:///storage/emulated/0/Pictures/test.jpg'),
+      (uri = 'file:///storage/emulated/0/Pictures/ConstructAI/75191045.jpg'),
     ]);
     // console.log(del);
   };
@@ -128,9 +129,9 @@ const Images = ({navigation}) => {
         </View>
 
         {/* IMAGES */}
-        {data.map(item => {
+        {data.map((item,index) => {
           {
-            console.log('imgDat==>>', item);
+            {/* console.log('imgDat==>>', item.image.uri); */}
           }
           return (
             <View key={item.modified} style={styles.ImgCard}>
@@ -141,7 +142,7 @@ const Images = ({navigation}) => {
                 />
                 <View style={styles.CrossBtn}>
                   <TouchableOpacity
-                    onPress={handleDelPhoto}
+                    onPress={handleDelPhoto( item.image.uri)}
                     style={{
                       backgroundColor: '#fff',
                       height: 30,
@@ -159,9 +160,10 @@ const Images = ({navigation}) => {
               <View style={styles.EditBtn}>
                 <TouchableOpacity
                   onPress={() => {
+                    // console.log((item.image.uri).substr(7))
                     navigation.navigate('EditPhoto', {
-                      ImgUri:
-                        '/storage/emulated/0/Pictures/IMG_1659355300864.jpg',
+                      index: index,
+                      ImgUri:(item.image.uri).substr(7),
                     });
                   }}
                   style={{

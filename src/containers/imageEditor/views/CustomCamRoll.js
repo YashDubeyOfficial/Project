@@ -20,7 +20,7 @@ const CustomCamRoll = props => {
 
   const [galleryData, setGalleryData] = useState([]);
   const [imgUrl, setImgUrl] = useState([]);
-  // console.log(imgUrl);
+  console.log(imgUrl);
 
   const checkPermission = async () => {
     const hasPermission = await PermissionsAndroid.check(

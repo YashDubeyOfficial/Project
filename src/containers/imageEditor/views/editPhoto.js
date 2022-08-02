@@ -16,6 +16,9 @@ import {SketchCanvas} from '@terrylinla/react-native-sketch-canvas';
 import ColorPicker from './ColorPicker';
 import {useSharedValue} from 'react-native-reanimated';
 
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+
 const EditPhoto = (props,{navigation}) => {
 // console.log(props.navigation)
   const COLORS = [
@@ -57,6 +60,7 @@ const EditPhoto = (props,{navigation}) => {
           <Image source={require('../../../../assets/crossBlue.png')} />
         </TouchableOpacity>
         <View style={styles.sideBtn}>
+
           <TouchableOpacity
             style={styles.undoBtn}
             onPress={() => {
@@ -65,6 +69,7 @@ const EditPhoto = (props,{navigation}) => {
             }}>
             <Image source={require('../../../../assets/undoArrow.png')} />
           </TouchableOpacity>
+
           <View style={styles.editPen}>
             <Image
               style={{
@@ -74,6 +79,7 @@ const EditPhoto = (props,{navigation}) => {
               source={require('../../../../assets/editPen.png')}
             />
           </View>
+
         </View>
       </View>
 
@@ -100,6 +106,7 @@ const EditPhoto = (props,{navigation}) => {
       <View style={styles.colorPicker}>
         <ColorPicker onColorChanged={onColorChanged} />
       </View>
+
       <TouchableOpacity
         style={styles.saveBtn}
         onPress={() => {
@@ -134,6 +141,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     top: 10,
     position: 'absolute',
+    justifyContent:'space-between',
   },
   closeBtn: {
     height: 40,
@@ -154,7 +162,7 @@ const styles = StyleSheet.create({
   sideBtn: {
     flexDirection: 'row',
     // borderWidth: 3,
-    // marginLeft: Dimensions.get('window').width - 140,
+    marginLeft: 25,
   },
   undoBtn: {
     height: 40,
@@ -186,8 +194,8 @@ const styles = StyleSheet.create({
   },
   colorPicker: {
     position: 'absolute',
-    left: 270,
-    top: 145,
+    left: SCREEN_WIDTH -135,
+    bottom: SCREEN_HEIGHT - 160,
     transform: [{rotate: '90deg'}],
   },
   saveBtn: {

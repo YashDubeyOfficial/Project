@@ -59,7 +59,7 @@ const Home = ({navigation}) => {
   const [modal, setModal] = useState(false);
   const [Img, setImg] = useState([]);
   // console.log('parent==>>', data);
-  // console.log('parent')
+  // console.log(SCREEN_WIDTH)
   useEffect(() => {
     getPhotos();
   }, []);
@@ -106,27 +106,32 @@ const Home = ({navigation}) => {
             }
             return (
               <View key={item.timestamp} style={styles.addedImg}>
-                <Image
-                  // source={item.pic}
-                  source={{uri: item.image.uri}}
-                  style={[
-                    index % 2 == 0 ? styles.addedImgOdd : styles.addedImgEve,
-                    index === 4 ? styles.addedLstImg : null,
-                  ]} //dynamic
-                />
-                {index === 4 ? (
-                  <Text
-                    style={{
-                      color: '#fff',
-                      position: 'absolute',
-                      alignSelf:'center',
-                      fontWeight:'bold',
-                      fontSize:20,
-
-                    }}>
-                    + 5 others
-                  </Text>
-                ) : null}
+                <TouchableOpacity
+                  onPress={() => {
+                    index === 4 ? console.log(navigation.navigate('Images')) : console.log(false);
+                  }}>
+                  <Image
+                    // source={item.pic}
+                    source={{uri: item.image.uri}}
+                    style={[
+                      index % 2 == 0 ? styles.addedImgOdd : styles.addedImgEve,
+                      index === 4 ? styles.addedLstImg : null,
+                    ]} //dynamic
+                  />
+                  {index === 4 ? (
+                    <Text
+                      style={{
+                        color: '#fff',
+                        position: 'absolute',
+                        alignSelf: 'center',
+                        fontWeight: 'bold',
+                        fontSize: 20,
+                        top:55
+                      }}>
+                      + 5 others
+                    </Text>
+                  ) : null}
+                </TouchableOpacity>
               </View>
             );
           })}
@@ -197,8 +202,8 @@ const styles = StyleSheet.create({
     felx: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-around', //X-axis
     alignItems: 'center',
+    paddingHorizontal: SCREEN_WIDTH * 0.04
   },
   addImg: {
     borderWidth: 1,
@@ -212,9 +217,9 @@ const styles = StyleSheet.create({
   },
   addedImg: {
     // borderWidth:1,
-    justifyContent: 'center', //Y-axis
+    // justifyContent: 'center', //Y-axis
     marginVertical: 18,
-    marginLeft: SCREEN_WIDTH * 0.05,
+    marginLeft: SCREEN_WIDTH * 0.07,
   },
   addedImgOdd: {
     height: 131,

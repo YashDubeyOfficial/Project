@@ -16,14 +16,7 @@ const Stack = createNativeStackNavigator();
 const StackNavigation = ({navigation}) => {
   return (
     <Stack.Navigator>
-     <Stack.Screen
-        name="Images"
-        component={Images}
-        options={{
-          headerShown: false,
-        }}
-      />
-    {/* <Stack.Screen
+      {/* <Stack.Screen
       name="Test"
       component={Test}
       options={{
@@ -65,7 +58,13 @@ const StackNavigation = ({navigation}) => {
           headerShown: false,
         }}
       />
-       
+      <Stack.Screen
+        name="Images"
+        component={Images}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
